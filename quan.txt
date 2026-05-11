@@ -1,0 +1,86 @@
+
+import tensorflow as tf
+from tensorflow.keras import layers, models
+import tensorflow_model_optimization as tfmot
+     
+
+# Load MNIST dataset
+(X_train, y_train), (X_test, y_test) = tf.keras.datasets.mnist.load_data()
+
+# Normalize data
+X_train = X_train / 255.0
+X_test = X_test / 255.0
+
+# -----------------------------
+# Baseline Model
+# -----------------------------
+model = models.Sequential([
+    layers.Flatten(input_shape=(28,28)),
+    layers.Dense(128, activation='relu'),
+    layers.Dense(10, activation='softmax')
+])
+     
+
+# Compile baseline model
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+# Train baseline model
+model.fit(X_train, y_train, epochs=5)
+
+# Evaluate baseline model
+loss, acc = model.evaluate(X_test, y_test)
+
+print("Baseline Accuracy:", acc)
+
+
+
+# -----------------------------
+# Pruning
+# -----------------------------
+
+# Apply pruning
+prune_low_magnitude = tfmot.sparsity.keras.prune_low_magnitude
+
+pruned_model = prune_low_magnitude(model)
+
+# Compile pruned model
+pruned_model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+     
+
+# Fine-tune pruned model
+pruned_model.fit(X_train, y_train, epochs=2)
+
+# Evaluate pruned model
+loss, acc = pruned_model.evaluate(X_test, y_test)
+
+print("Pruned Model Accuracy:", acc)
+     
+
+
+# -----------------------------
+# Quantization
+# -----------------------------
+
+# Convert to TensorFlow Lite model
+converter = tf.lite.TFLiteConverter.from_keras_model(pruned_model)
+
+# Apply quantization
+converter.optimizations = [tf.lite.Optimize.DEFAULT]
+
+# Convert model
+quantized_model = converter.convert()
+
+# Save quantized model
+with open("quantized_pruned_model.tflite", "wb") as f:
+    f.write(quantized_model)
+
+print("Quantized and Pruned model saved successfully")

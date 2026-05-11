@@ -1,0 +1,94 @@
+import tensorflow as tf
+import numpy as np
+     
+
+print("TensorFlow Version:", tf.__version__)
+     
+
+# 1. Tensor Creation
+a = tf.constant([10, 20, 30], dtype=tf.float32)
+b = tf.constant([1, 2, 3], dtype=tf.float32)
+
+print("\nTensor A:", a.numpy())
+print("Tensor B:", b.numpy())
+print("Shape of A:", a.shape)
+print("Datatype of A:", a.dtype)
+     
+
+# 2. Addition
+add = tf.add(a, b)
+print("\nAddition:", add.numpy())
+
+# 3. Subtraction
+sub = tf.subtract(a, b)
+print("Subtraction:", sub.numpy())
+
+# 4. Multiplication
+mul = tf.multiply(a, b)
+print("Multiplication:", mul.numpy())
+
+# 5. Division
+div = tf.divide(a, b)
+print("Division:", div.numpy())
+     
+
+# 6. Reshape
+reshape_tensor = tf.reshape(a, (3,1))
+print("\nReshaped Tensor:")
+print(reshape_tensor.numpy())
+
+# 7. Square
+square = tf.square(a)
+print("\nSquare:", square.numpy())
+
+# 8. Broadcasting
+broadcast = a + 5
+print("\nBroadcasting (+5):", broadcast.numpy())
+
+# 9. Concatenation
+concat = tf.concat([a, b], axis=0)
+print("\nConcatenated Tensor:", concat.numpy())
+     
+
+# 10. Maximum and Minimum
+max_tensor = tf.maximum(a, b)
+min_tensor = tf.minimum(a, b)
+
+print("\nMaximum:", max_tensor.numpy())
+print("Minimum:", min_tensor.numpy())
+
+# 11. Absolute Value
+negative_tensor = tf.constant([-5, -10, 15, -20], dtype=tf.float32)
+absolute = tf.abs(negative_tensor)
+
+print("\nNegative Tensor:", negative_tensor.numpy())
+print("Absolute Values:", absolute.numpy())
+
+# 12. Logarithm
+log_tensor = tf.constant([1.0, 2.0, 5.0, 10.0])
+log_result = tf.math.log(log_tensor)
+
+print("\nLog Values:", log_result.numpy())
+
+# 13. Exponential
+exp_tensor = tf.constant([1.0, 2.0, 3.0])
+exp_result = tf.exp(exp_tensor)
+
+print("\nExponential Values:", exp_result.numpy())
+     
+
+# 14. Matrix Multiplication
+m1 = tf.constant([[1,2],[3,4]], dtype=tf.float32)
+m2 = tf.constant([[5,6],[7,8]], dtype=tf.float32)
+
+matmul = tf.matmul(m1, m2)
+
+print("\nMatrix Multiplication:")
+print(matmul.numpy())
+
+# 15. Reduce Operations
+print("\nSum:", tf.reduce_sum(a).numpy())
+print("Mean:", tf.reduce_mean(a).numpy())
+print("Max:", tf.reduce_max(a).numpy())
+print("Min:", tf.reduce_min(a).numpy())
+     

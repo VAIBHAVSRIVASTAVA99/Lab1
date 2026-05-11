@@ -1,0 +1,35 @@
+import tensorflow as tf
+from tensorflow.keras import models,layers
+import numpy as np
+
+def generate_sequence(n_timesteps):
+    x=np.linspace(0,50,n_timesteps)
+    y=np.sin(x)
+    return y
+
+n_timesteps=100
+sequence =generate_sequence(n_timesteps)
+
+X,Y=[],[]
+sequence_length=10
+
+for i in range(len(sequence)-sequence_length):
+    X.append(sequence[i:i+sequence_length])
+    Y.append(sequence_length[i+sequence_length])
+    
+X=np.array(X)
+Y=np.array(Y)
+    
+X=X.reshape((X.shape[0],X.shape[1],1))
+
+model=models.Sequential([
+    layers.SimpleRNN(10,activation="relu",return_sequence=False,input_shape=(sequence_length,1)),
+    layers.Dense(1)
+])
+
+model.compile(optimizer="adam",loss="mse")
+model.fit(X,Y,epochs=100,verbose=1)
+pred=model.predict(X)
+
+print("Expected output : ",Y[:5])
+print("Predicted output : ",pred[:5].flatten())
