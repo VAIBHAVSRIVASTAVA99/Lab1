@@ -1,0 +1,128 @@
+Packet Filtering & Wireshark — Commands + Steps
+
+Your second practical is Packet Filtering and Analysis using Wireshark, including capturing an HTTP login request.
+
+1. Start Apache
+sudo service apache2 start
+
+Create the test directory:
+
+sudo mkdir -p /var/www/html/testlogin
+cd /var/www/html/testlogin
+2. Create Login Page
+sudo nano login.html
+
+Paste:
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Login Page</title>
+</head>
+<body>
+    <h2>Login Form</h2>
+
+    <form action="login.php" method="post">
+        Username: <input type="text" name="username"><br><br>
+        Password: <input type="password" name="password"><br><br>
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+
+Save:
+
+Ctrl+O → Enter → Ctrl+X
+
+3. Create PHP file
+sudo nano login.php
+
+Paste:
+
+<?php
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+echo "<h2>Login Attempt</h2>";
+echo "Username: " . $username . "<br>";
+echo "Password: " . $password . "<br>";
+?>
+
+Save:
+
+Ctrl+O → Enter → Ctrl+X
+
+4. Check Apache
+sudo service apache2 status
+sudo service apache2 start
+5. Open Login Page
+
+Firefox:
+
+http://127.0.0.1/testlogin/login.html
+
+Or:
+
+curl http://127.0.0.1/testlogin/login.html
+
+6. Start Wireshark
+
+Open:
+
+sudo wireshark
+
+Select loopback (lo) interface and start capture.
+
+Apply this filter:
+
+http.request.method == "POST"
+
+7. Perform Login
+
+In Firefox enter:
+
+Username: admin
+Password: test123
+
+Click Login.
+
+8. View Credentials in Wireshark
+
+In Wireshark:
+
+Find the POST packet → Right-click → Follow → TCP Stream
+
+You should see the HTTP POST data, including:
+
+username=admin
+password=test123
+
+The practical specifically demonstrates that HTTP transmits these credentials in plaintext.
+
+9. Other useful Wireshark filters
+
+DNS:
+
+dns
+
+HTTPS/TLS:
+
+tls
+
+Specific IP:
+
+ip.addr == 18.161.216.37
+
+TCP port 443:
+
+tcp.port == 443
+
+10. Save capture
+
+Click the red square to stop capture.
+
+Then:
+
+File → Save As → .pcap
+
+The expected observation is that HTTP POST sends data in plaintext, whereas HTTPS encrypts the data.

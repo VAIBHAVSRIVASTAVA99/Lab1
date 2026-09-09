@@ -1,0 +1,106 @@
+DVWA SQL Injection — Commands & Steps
+
+Based on your uploaded practical file.
+
+1. Update Kali
+sudo apt update
+2. Install & start Apache
+sudo apt install apache2 -y
+sudo systemctl start apache2
+sudo systemctl enable apache2
+sudo systemctl status apache2
+3. Install & start MariaDB
+sudo apt install mariadb-server -y
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+sudo systemctl status mariadb
+4. Install PHP
+sudo apt install php php-mysql libapache2-mod-php -y
+php -v
+5. Install Git
+sudo apt install git -y
+6. Download DVWA
+cd /var/www/html
+sudo rm index.html
+sudo git clone https://github.com/digininja/DVWA.git
+7. Configure DVWA
+cd /var/www/html/DVWA/config
+sudo cp config.inc.php.dist config.inc.php
+8. Create database
+sudo mysql
+
+Inside MariaDB:
+
+CREATE DATABASE dvwa;
+CREATE USER 'dvwa'@'localhost' IDENTIFIED BY 'p@ssw0rd';
+GRANT ALL PRIVILEGES ON dvwa.* TO 'dvwa'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+
+9. Edit DVWA configuration
+sudo nano /var/www/html/DVWA/config/config.inc.php
+
+Set:
+
+$_DVWA['db_server'] = '127.0.0.1';
+$_DVWA['db_database'] = 'dvwa';
+$_DVWA['db_user'] = 'dvwa';
+$_DVWA['db_password'] = 'p@ssw0rd';
+
+Save: Ctrl+O → Enter
+Exit: Ctrl+X
+
+
+10. Give permissions
+sudo chmod -R 777 /var/www/html/DVWA/hackable/uploads
+sudo chmod -R 777 /var/www/html/DVWA/config
+11. Restart Apache
+sudo systemctl restart apache2
+12. Open DVWA
+
+Firefox →
+
+http://localhost/DVWA
+
+Click Create / Reset Database.
+
+13. Login
+Username: admin
+Password: password
+14. Set security
+
+DVWA Security → Low → Submit
+
+15. SQL Injection
+
+Left menu → SQL Injection
+
+Enter:
+
+1
+
+Click Submit.
+
+Then test:
+
+'
+
+Click Submit.
+
+An SQL error/unexpected behavior demonstrates the vulnerability.
+
+16. Record results
+
+Record:
+
+Returned user information
+Error messages
+Difference between valid and invalid input
+17. Stop services after practical
+sudo systemctl stop apache2
+sudo systemctl stop mariadb
+
+Verify:
+
+sudo systemctl status apache2
+sudo systemctl status mariadb
