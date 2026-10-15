@@ -1,0 +1,60 @@
+https://sourceforge.net/projects/metasploitable/ 
+Network=Host-only Adapter  
+1. General → Basic
+- Type: Linux
+- Version: Ubuntu (32-bit) or Other Linux (32-bit)
+Do not select Windows 11.
+2. System → Processor
+- Set CPUs to 1.
+- If Enable PAE/NX is available, enable it.
+3. Display → Screen
+- Graphics Controller: VBoxVGA, if available.
+- 3D Acceleration: disabled.
+Username: msfadmin 
+Password: msfadmin
+ifconfig 
+
+
+Kali Linux
+ping 192.168.56.102
+Open Firefox in Kali. 
+In the address bar, enter: 
+http://192.168.56.102/dvwa 
+Set Security to Low 
+Click Command Execution in the left menu. 
+Enter: 127.0.0.1
+
+
+
+Program 4 
+nano buffer.c
+#include <stdio.h> 
+#include <string.h> 
+int main() 
+{ 
+char buff[15]; 
+int pass = 0; 
+printf("\nEnter the password:\n"); 
+fgets(buff, sizeof(buff), stdin); 
+buff[strcspn(buff, "\n")] = '\0';   // Remove newline 
+if(strcmp(buff, "thegeekstuff")) 
+{ 
+printf("\nWrong Password\n"); 
+} 
+else 
+{ 
+printf("\nCorrect Password\n"); 
+pass = 1; 
+} 
+if(pass){ 
+} 
+printf("\nRoot privileges given to the user\n"); 
+return 0; 
+}
+
+gcc -g -fno-stack-protector -z execstack -o buffer buffer.c
+./buffer 
+
+
+Program 5 
+https://www.grigsoft.com/wincmp3.htm
